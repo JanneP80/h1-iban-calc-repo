@@ -18,7 +18,7 @@ namespace h1_iban_calc_repo
 
             Console.WriteLine("Please enter your BBAN account number in format xxxxxx-xx(xxxx): ");
             string bbannumber = Console.ReadLine();
-            // TODO! poista vielä väliviiva tässä TODO!
+            //  remove space and line if needed
             bbannumber = bbannumber.Replace("-", "").Replace(" ", "");
             
             // TODO! tarkista ettei käyttäjä syötä liiba-laabaa TODO! 6+ (2...6).
@@ -33,9 +33,7 @@ namespace h1_iban_calc_repo
                     {
                         computerBBAN[i2] = arraytoedit[i2];
                     }
-                    // add end numbers 
-                    // 7-14
-                    // Add the rest zeros
+                    // 7-14                    
                     templength = arraytoedit.Length - 7;
 
                 }
@@ -45,7 +43,7 @@ namespace h1_iban_calc_repo
                     {
                         computerBBAN[i3] = arraytoedit[i3];
                     }
-                    templength = arraytoedit.Length - 6;
+                    templength = arraytoedit.Length - 6; // 6-14
 
                 }
             }
@@ -60,12 +58,23 @@ namespace h1_iban_calc_repo
                 i5++;
             }
 
-            // add end numbers
+            Console.WriteLine(computerBBAN);
+            // calc the checksum with Luhn modulo TODO!!
 
-            // Add the rest zeros
 
             // convert BBAN to IBAN format : XXyy YYYY YYYY YYYY YY
-            Console.WriteLine(computerBBAN);
+            // add end FI and numbers TODO LUNCH!!!
+            ibannumber = new string(computerBBAN);
+            ibannumber = ibannumber.Insert(14, "151800"); //add FI00 = 151800
+            // calc IBAN checksum
+            double ibannumberinteger = Convert.ToDouble(ibannumber);
+            double counting = 0;
+            double disc = 0;
+            counting = ibannumberinteger % 97;
+            disc = 98 - counting;
+            Console.WriteLine(disc);
+
+            Console.WriteLine(ibannumber);
 
             Console.ReadKey();
         }
