@@ -66,14 +66,24 @@ namespace h1_iban_calc_repo
             // add end FI and numbers TODO LUNCH!!!
             ibannumber = new string(computerBBAN);
             ibannumber = ibannumber.Insert(14, "151800"); //add FI00 = 151800
+            Console.WriteLine(ibannumber);
             // calc IBAN checksum
             double ibannumberinteger = Convert.ToDouble(ibannumber);
             double counting = 0;
             double disc = 0;
             counting = ibannumberinteger % 97;
-            disc = 98 - counting;
+            disc = 98 - counting; // add to ibannumber (is string)
             Console.WriteLine(disc);
+            Console.WriteLine(ibannumberinteger);
+            ibannumberinteger = ibannumberinteger + disc;
+            Console.WriteLine(ibannumberinteger);
 
+            // palauta string muotoon
+            //ibannumber = ibannumberinteger.ToString(); // ei toimi, näyttää doublena
+
+            string end2 = disc.ToString();
+            ibannumber = ibannumber.Remove(ibannumber.Length - 2, 2) + end2;
+                       
             Console.WriteLine(ibannumber);
 
             Console.ReadKey();
