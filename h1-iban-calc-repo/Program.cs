@@ -59,8 +59,10 @@ namespace h1_iban_calc_repo
             }
 
             Console.WriteLine(computerBBAN);
-            // calc the checksum with Luhn modulo TODO!!
-
+            // calc the checksum with Luhn modulo 10 TODO!!
+            // string checsum = new string(computerBBAN);
+            // checsum = checsum.Remove(checsum.Length - 1, 1);
+            // for (int i6 = computerBBAN.Length; i6 > computerBBAN.Length
 
             // convert BBAN to IBAN format : XXyy YYYY YYYY YYYY YY
             // add end FI and numbers TODO LUNCH!!!
@@ -75,7 +77,7 @@ namespace h1_iban_calc_repo
             disc = 98 - counting; // add to ibannumber (is string)
             Console.WriteLine(disc);
             Console.WriteLine(ibannumberinteger);
-            ibannumberinteger = ibannumberinteger + disc; // helppo muttei käyttökelpoinen
+            // ibannumberinteger = ibannumberinteger + disc; // helppo muttei käyttökelpoinen
             Console.WriteLine(ibannumberinteger);
 
             // palauta string muotoon
@@ -85,18 +87,17 @@ namespace h1_iban_calc_repo
             // jos alle 10
             if (disc < 10)
             {
-                ibannumber = ibannumber + +'0' + end2;
+                ibannumber =  "FI" +'0' + end2 + ibannumber;
             }
             else
             {
                 // if over 10
-                ibannumber = ibannumber + end2;
+                ibannumber = "FI" + end2 + ibannumber;
             }
 
             Console.WriteLine(ibannumber);
 
-            // formatting iban into correct form
-
+            // 
 
             Console.ReadKey();
         }
