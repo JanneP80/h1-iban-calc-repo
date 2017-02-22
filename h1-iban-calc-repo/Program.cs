@@ -12,31 +12,41 @@ namespace h1_iban_calc_repo
         {
             //string bbannumber;
             string ibannumber;
+            char[] computerBBAN = new char[14];
             // asks BBAN account number in format xxxxxx-xx(xxxx)
 
-            Console.WriteLine("Please enter your BBAN account number: ");
+            Console.WriteLine("Please enter your BBAN account number in format xxxxxx-xx(xxxx): ");
             string bbannumber = Console.ReadLine();
+            // TODO! tarkista ettei käyttäjä syötä liiba-laabaa TODO! 6+ (2...6).
             char[] arraytoedit = bbannumber.ToCharArray();
 
-            // poista vielä väliviiva tässä TODO!
-            for (int i=0; i<arraytoedit.Length; i++)
+            // TODO! poista vielä väliviiva tässä TODO!
+            for (int i = 0; i < arraytoedit.Length; i++) // start converting into computer liguistic mode
             {
                 if (arraytoedit[0] == '4' | arraytoedit[0] == '5')
                 {
                     for (int i2 = 0; i2 < 7; i2++) // OP and Aktia, starting with 4 and 5
                     {
-
+                        computerBBAN[i2] = arraytoedit[i2];
                     }
+                    
+
                 }
                 else
-                for (int i2 = 0; i2 < 6; i2++) // All the other banks
                 {
-
-
+                    for (int i2 = 0; i2 < 6; i2++) // All the other banks
+                    {
+                        computerBBAN[i2] = arraytoedit[i2];
+                    }
+                   
                 }
+                
+                // add end numbers
+
+                // Add the rest zeros
             }
             // convert BBAN to IBAN format : XXyy YYYY YYYY YYYY YY
-
+            Console.WriteLine(computerBBAN);
 
             Console.ReadKey();
         }
