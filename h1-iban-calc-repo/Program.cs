@@ -66,10 +66,10 @@ namespace h1_iban_calc_repo
             int[] multiplermatrix = { 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
             char[] computerBBANchecksum = computerBBAN.Take(computerBBAN.Count() - 1).ToArray();
             int[] BBANint = Array.ConvertAll(computerBBANchecksum, c => (int)Char.GetNumericValue(c));
-            for (int a = 0; a < BBANint.Length; a++)
-            {
+            //for (int a = 0; a < BBANint.Length; a++)
+            //{
 
-            }
+            //}
             int[] BBANintChecksum = new int[13];
             for (int ii = 0; ii < BBANintChecksum.Length; ii++)
             {
@@ -79,17 +79,56 @@ namespace h1_iban_calc_repo
                 BBANintChecksum[ii] = BBANint[ii] * multiplermatrix[ii];
                 // }
             }
+            // Console.WriteLine(BBANintChecksum);
+            for (int ai=0; ai < BBANintChecksum.Length; ai++)
+            {
+                Console.Write(BBANintChecksum[ai] +" " );
+
+            }
+            string results = string.Join("", BBANintChecksum.Select(i => i.ToString()).ToArray());
+            Console.WriteLine(results);
+            
+            int[] y = results.Select(o=> o - 48).ToArray();
+
+            int sum = 0;
+            for (int ei = 0; ei < y.Length; ei++)
+            {
+                sum += y[ei];
+            }
+            Console.WriteLine(sum);
+            int sumCeil = (int)(Math.Ceiling(sum / 10.0d) * 10);
+            Console.WriteLine(sumCeil - sum);
+            int checksum10 = sumCeil - sum;
+
+            // computerBBAN to int
+                int[] BBANint14 = Array.ConvertAll(computerBBAN, c => (int)Char.GetNumericValue(c));
+
+            if (BBANint14[13] == checksum10)
+            {
+                Console.WriteLine("BBAN Checksum check pass.");
+            }
+            else
+            {
+                Console.WriteLine("BBAN Checksum check fail.");
+            }
+
             // convert BBAN to IBAN format : XXyy YYYY YYYY YYYY YY
             // add end FI and numbers TODO LUNCH!!!
             ibannumber = new string(computerBBAN);
             string ibannumbertemp = ibannumber.Insert(14, "151800"); //add FI00 = 151800
             Console.WriteLine(ibannumbertemp);
             // calc IBAN checksum
+            /*
             double ibannumberinteger = Convert.ToDouble(ibannumbertemp);
             double counting = 0;
             double disc = 0;
-            counting = ibannumberinteger % 97;
-            disc = 98 - counting; // add to ibannumber (is string)
+            */
+            decimal ibannumberinteger = Convert.ToDecimal(ibannumbertemp);
+            decimal counting = 0;
+            decimal disc = 0;
+
+            counting = (ibannumberinteger % 97);
+            disc = (98 - counting); // add to ibannumber (is string)
             Console.WriteLine(disc);
             Console.WriteLine(ibannumberinteger);
             // ibannumberinteger = ibannumberinteger + disc; // helppo muttei käyttökelpoinen
