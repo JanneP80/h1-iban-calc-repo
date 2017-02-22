@@ -38,9 +38,9 @@ namespace h1_iban_calc_repo
                 }
                 else
                 {
-                    for (int i2 = 6; i2 < templength; i2++) // All the other banks
+                    for (int i3 = 0; i3 < 6; i3++) // All the other banks
                     {
-                        computerBBAN[i2] = arraytoedit[i2];
+                        computerBBAN[i3] = arraytoedit[i3];
                     }
                     templength = arraytoedit.Length - 6;
                    
@@ -49,9 +49,12 @@ namespace h1_iban_calc_repo
                     // Add the rest zeros
 
                 }
-                for (int i2 = arraytoedit.Length; i2 > templength; i2--)
+                Console.WriteLine(templength);
+                Console.WriteLine(arraytoedit);
+                Console.WriteLine(computerBBAN);
+                for (int i4 = arraytoedit.Length; i4 > templength; i4--)
                 {
-                    computerBBAN[i2] = arraytoedit[i2];
+                    computerBBAN[i4] = arraytoedit[i4];
                 }
 
                 // add end numbers
