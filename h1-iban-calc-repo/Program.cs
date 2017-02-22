@@ -34,11 +34,7 @@ namespace h1_iban_calc_repo
                     // 7-14
                     // Add the rest zeros
                     templength = arraytoedit.Length - 7;
-                    for (int i2 = arraytoedit.Length; i2 > templength; i2--)
-                    {
-                        computerBBAN[i2] = arraytoedit[i2];
-                    }
-
+                
                 }
                 else
                 {
@@ -47,14 +43,15 @@ namespace h1_iban_calc_repo
                         computerBBAN[i2] = arraytoedit[i2];
                     }
                     templength = arraytoedit.Length - 6;
-                    for (int i2 = arraytoedit.Length; i2 > templength; i2--)
-                    {
-                        computerBBAN[i2] = arraytoedit[i2];
-                    }
+                   
                     // add end numbers
                     // 6-14
                     // Add the rest zeros
 
+                }
+                for (int i2 = arraytoedit.Length; i2 > templength; i2--)
+                {
+                    computerBBAN[i2] = arraytoedit[i2];
                 }
 
                 // add end numbers
