@@ -12,7 +12,8 @@ namespace h1_iban_calc_repo
         {
             //string bbannumber;
             string ibannumber;
-            char[] computerBBAN = new char[14];
+            int templength = 0;
+            char[] computerBBAN = { '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0' }; //new char[14];
             // asks BBAN account number in format xxxxxx-xx(xxxx)
 
             Console.WriteLine("Please enter your BBAN account number in format xxxxxx-xx(xxxx): ");
@@ -29,18 +30,33 @@ namespace h1_iban_calc_repo
                     {
                         computerBBAN[i2] = arraytoedit[i2];
                     }
-                    
+                    // add end numbers 
+                    // 7-14
+                    // Add the rest zeros
+                    templength = arraytoedit.Length - 7;
+                    for (int i2 = arraytoedit.Length; i2 > templength; i2--)
+                    {
+                        computerBBAN[i2] = arraytoedit[i2];
+                    }
 
                 }
                 else
                 {
-                    for (int i2 = 0; i2 < 6; i2++) // All the other banks
+                    for (int i2 = 6; i2 < templength; i2++) // All the other banks
                     {
                         computerBBAN[i2] = arraytoedit[i2];
                     }
-                   
+                    templength = arraytoedit.Length - 6;
+                    for (int i2 = arraytoedit.Length; i2 > templength; i2--)
+                    {
+                        computerBBAN[i2] = arraytoedit[i2];
+                    }
+                    // add end numbers
+                    // 6-14
+                    // Add the rest zeros
+
                 }
-                
+
                 // add end numbers
 
                 // Add the rest zeros
