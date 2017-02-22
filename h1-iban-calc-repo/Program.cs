@@ -18,10 +18,13 @@ namespace h1_iban_calc_repo
 
             Console.WriteLine("Please enter your BBAN account number in format xxxxxx-xx(xxxx): ");
             string bbannumber = Console.ReadLine();
+            // TODO! poista vielä väliviiva tässä TODO!
+            bbannumber = bbannumber.Replace("-", "").Replace(" ", "");
+            
             // TODO! tarkista ettei käyttäjä syötä liiba-laabaa TODO! 6+ (2...6).
             char[] arraytoedit = bbannumber.ToCharArray();
 
-            // TODO! poista vielä väliviiva tässä TODO!
+            
             for (int i = 0; i < arraytoedit.Length; i++) // start converting into computer liguistic mode
             {
                 if (arraytoedit[0] == '4' | arraytoedit[0] == '5')
@@ -34,7 +37,7 @@ namespace h1_iban_calc_repo
                     // 7-14
                     // Add the rest zeros
                     templength = arraytoedit.Length - 7;
-                
+
                 }
                 else
                 {
@@ -43,24 +46,24 @@ namespace h1_iban_calc_repo
                         computerBBAN[i3] = arraytoedit[i3];
                     }
                     templength = arraytoedit.Length - 6;
-                   
-                    // add end numbers
-                    // 6-14
-                    // Add the rest zeros
 
                 }
-                Console.WriteLine(templength);
-                Console.WriteLine(arraytoedit);
-                Console.WriteLine(computerBBAN);
-                for (int i4 = arraytoedit.Length; i4 > templength; i4--)
-                {
-                    computerBBAN[i4] = arraytoedit[i4];
-                }
-
-                // add end numbers
-
-                // Add the rest zeros
             }
+            Console.WriteLine(templength);
+            Console.WriteLine(arraytoedit);
+            Console.WriteLine(computerBBAN);
+            int i5 = 0;
+            for (int i4 = arraytoedit.Length; i4 > arraytoedit.Length - templength; i4--)
+            {
+
+                computerBBAN[13 - i5] = arraytoedit[i4-1];
+                i5++;
+            }
+
+            // add end numbers
+
+            // Add the rest zeros
+
             // convert BBAN to IBAN format : XXyy YYYY YYYY YYYY YY
             Console.WriteLine(computerBBAN);
 
