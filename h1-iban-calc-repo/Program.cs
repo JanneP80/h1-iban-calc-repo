@@ -63,7 +63,22 @@ namespace h1_iban_calc_repo
             // string checsum = new string(computerBBAN);
             // checsum = checsum.Remove(checsum.Length - 1, 1);
             // for (int i6 = computerBBAN.Length; i6 > computerBBAN.Length
+            int[] multiplermatrix = { 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
+            char[] computerBBANchecksum = computerBBAN.Take(computerBBAN.Count() - 1).ToArray();
+            int[] BBANint = Array.ConvertAll(computerBBANchecksum, c => (int)Char.GetNumericValue(c));
+            for (int a = 0; a < BBANint.Length; a++)
+            {
 
+            }
+            int[] BBANintChecksum = new int[13];
+            for (int ii = 0; ii < BBANintChecksum.Length; ii++)
+            {
+               // for (int j = 0; j < 3; j++)
+               // {
+                 //   BBANintChecksum[ii, j] = BBANint[ii, j] * multiplermatrix[ii, j];
+                BBANintChecksum[ii] = BBANint[ii] * multiplermatrix[ii];
+                // }
+            }
             // convert BBAN to IBAN format : XXyy YYYY YYYY YYYY YY
             // add end FI and numbers TODO LUNCH!!!
             ibannumber = new string(computerBBAN);
@@ -87,7 +102,7 @@ namespace h1_iban_calc_repo
             // jos alle 10
             if (disc < 10)
             {
-                ibannumber =  "FI" +'0' + end2 + ibannumber;
+                ibannumber = "FI" + '0' + end2 + ibannumber;
             }
             else
             {
