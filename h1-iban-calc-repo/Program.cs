@@ -20,11 +20,11 @@ namespace h1_iban_calc_repo
             string bbannumber = Console.ReadLine();
             //  remove space and line if needed
             bbannumber = bbannumber.Replace("-", "").Replace(" ", "");
-            
+
             // TODO! tarkista ettei käyttäjä syötä liiba-laabaa TODO! 6+ (2...6).
             char[] arraytoedit = bbannumber.ToCharArray();
 
-            
+
             for (int i = 0; i < arraytoedit.Length; i++) // start converting into computer liguistic mode
             {
                 if (arraytoedit[0] == '4' | arraytoedit[0] == '5')
@@ -54,7 +54,7 @@ namespace h1_iban_calc_repo
             for (int i4 = arraytoedit.Length; i4 > arraytoedit.Length - templength; i4--)
             {
 
-                computerBBAN[13 - i5] = arraytoedit[i4-1];
+                computerBBAN[13 - i5] = arraytoedit[i4 - 1];
                 i5++;
             }
 
@@ -65,26 +65,38 @@ namespace h1_iban_calc_repo
             // convert BBAN to IBAN format : XXyy YYYY YYYY YYYY YY
             // add end FI and numbers TODO LUNCH!!!
             ibannumber = new string(computerBBAN);
-            ibannumber = ibannumber.Insert(14, "151800"); //add FI00 = 151800
-            Console.WriteLine(ibannumber);
+            string ibannumbertemp = ibannumber.Insert(14, "151800"); //add FI00 = 151800
+            Console.WriteLine(ibannumbertemp);
             // calc IBAN checksum
-            double ibannumberinteger = Convert.ToDouble(ibannumber);
+            double ibannumberinteger = Convert.ToDouble(ibannumbertemp);
             double counting = 0;
             double disc = 0;
             counting = ibannumberinteger % 97;
             disc = 98 - counting; // add to ibannumber (is string)
             Console.WriteLine(disc);
             Console.WriteLine(ibannumberinteger);
-            ibannumberinteger = ibannumberinteger + disc;
+            ibannumberinteger = ibannumberinteger + disc; // helppo muttei käyttökelpoinen
             Console.WriteLine(ibannumberinteger);
 
             // palauta string muotoon
             //ibannumber = ibannumberinteger.ToString(); // ei toimi, näyttää doublena
 
             string end2 = disc.ToString();
-            ibannumber = ibannumber.Remove(ibannumber.Length - 2, 2) + end2;
-                       
+            // jos alle 10
+            if (disc < 10)
+            {
+                ibannumber = ibannumber + +'0' + end2;
+            }
+            else
+            {
+                // if over 10
+                ibannumber = ibannumber + end2;
+            }
+
             Console.WriteLine(ibannumber);
+
+            // formatting iban into correct form
+
 
             Console.ReadKey();
         }
