@@ -25,35 +25,38 @@ namespace h1_iban_calc_repo
 
             // Main starts :
 
-            InputBBANNumber();                  // I
+            bbannumber = InputBBANNumber();     // I
+            Console.WriteLine(bbannumber);
             ConvertToComputerBBAN(bbannumber);  // II
             CalcBBANChecksum(computerBBAN);     // III // Maybe return result here and print it in Main and call loop again goto until pass
             ConvertBBANToIBAN(computerBBAN);    // IV
-            CalcIBANChecksum(ibannumber);       // V
-                                                // VI : Write in main.
-
+            ibannumber = CalcIBANChecksum(ibannumber, ibannumbertemp);       // V
+                                                                             // VI : Write in main.
             Console.WriteLine(ibannumber);
 
             Console.ReadKey();
         }
 
-        private static string InputBBANNumber()   // I
+        static string InputBBANNumber()   // I
         {
             // asks BBAN account number in format xxxxxx-xx(xxxx)
 
             Console.WriteLine("Please enter your BBAN account number in format xxxxxx-xx(xxxx): ");
-            string bbannumber = Console.ReadLine();
+            bbannumber = Console.ReadLine();
             //  remove space and line if needed
             bbannumber = bbannumber.Replace("-", "").Replace(" ", "");
 
             // TODO! tarkista ettei käyttäjä syötä liiba-laabaa TODO! 6+ (2...6).
+
+            Console.WriteLine(bbannumber);
             return bbannumber;
         }
 
-        private static char[] ConvertToComputerBBAN(string bbannumber)    // II
+        static char[] ConvertToComputerBBAN(string bbannumber)    // II
         {
             int templength = 0;
-
+            Console.WriteLine("bug:");
+            Console.WriteLine(bbannumber);
             char[] arraytoedit = bbannumber.ToCharArray();
 
             for (int i = 0; i < arraytoedit.Length; i++) // start converting into computer liguistic mode
@@ -66,7 +69,6 @@ namespace h1_iban_calc_repo
                     }
                     // 7-14                    
                     templength = arraytoedit.Length - 7;
-
                 }
                 else
                 {
@@ -75,7 +77,6 @@ namespace h1_iban_calc_repo
                         computerBBAN[i3] = arraytoedit[i3];
                     }
                     templength = arraytoedit.Length - 6; // 6-14
-
                 }
             }
             Console.WriteLine(templength);
@@ -92,15 +93,11 @@ namespace h1_iban_calc_repo
             return computerBBAN;
         }
 
-        private static void CalcBBANChecksum(char[] computerBBANr) // III
+        static void CalcBBANChecksum(char[] computerBBANr) // III
         {
-
-            // calc the checksum with Luhn modulo 10 TODO!!
-            // string checsum = new string(computerBBAN);
-            // checsum = checsum.Remove(checsum.Length - 1, 1);
-            // for (int i6 = computerBBAN.Length; i6 > computerBBAN.Length
+            // calc the checksum with Luhn modulo 10 !!            
             int[] multiplermatrix = { 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
-            char[] computerBBANchecksum = computerBBAN.Take(computerBBAN.Count() - 1).ToArray();
+            char[] computerBBANchecksum = computerBBAN.Take(computerBBAN.Count() - 1).ToArray(); // One last number must be removed for calculations
             int[] BBANint = Array.ConvertAll(computerBBANchecksum, c => (int)Char.GetNumericValue(c));
             //for (int a = 0; a < BBANint.Length; a++)
             //{
@@ -109,11 +106,7 @@ namespace h1_iban_calc_repo
             int[] BBANintChecksum = new int[13];
             for (int ii = 0; ii < BBANintChecksum.Length; ii++)
             {
-                // for (int j = 0; j < 3; j++)
-                // {
-                //   BBANintChecksum[ii, j] = BBANint[ii, j] * multiplermatrix[ii, j];
                 BBANintChecksum[ii] = BBANint[ii] * multiplermatrix[ii];
-                // }
             }
             // Console.WriteLine(BBANintChecksum);
             for (int ai = 0; ai < BBANintChecksum.Length; ai++)
@@ -151,26 +144,22 @@ namespace h1_iban_calc_repo
             // Maybe return result here and print it in Main and call loop again goto until pass
         }
 
-        private static string ConvertBBANToIBAN(char[] computerBBAN)  // IV
+        static string ConvertBBANToIBAN(char[] computerBBAN)  // IV
         {
 
             // convert BBAN to IBAN format : XXyy YYYY YYYY YYYY YY
-            // add end FI and numbers TODO LUNCH!!!
+            // add end FI and numbers
             ibannumber = new string(computerBBAN);
-            string ibannumbertemp = ibannumber.Insert(14, "151800"); //add FI00 = 151800
+            ibannumbertemp = ibannumber.Insert(14, "151800"); //add FI00 = 151800
             Console.WriteLine(ibannumbertemp);
             return ibannumbertemp;
         }
 
-        private static string CalcIBANChecksum(string ibannumber) // V
+        static string CalcIBANChecksum(string ibannumber, string ibannumbertemp) // V
         {
 
             // calc IBAN checksum
-            /*
-            double ibannumberinteger = Convert.ToDouble(ibannumbertemp);
-            double counting = 0;
-            double disc = 0;
-            */
+
             decimal ibannumberinteger = Convert.ToDecimal(ibannumbertemp);
             decimal counting = 0;
             decimal disc = 0;
@@ -180,10 +169,9 @@ namespace h1_iban_calc_repo
             Console.WriteLine(disc);
             Console.WriteLine(ibannumberinteger);
             // ibannumberinteger = ibannumberinteger + disc; // helppo muttei käyttökelpoinen
-            Console.WriteLine(ibannumberinteger);
 
             // palauta string muotoon
-            //ibannumber = ibannumberinteger.ToString(); // ei toimi, näyttää doublena
+            // ibannumber = ibannumberinteger.ToString(); // ei toimi, näyttää doublena
 
             string end2 = disc.ToString();
             // jos alle 10
@@ -196,6 +184,8 @@ namespace h1_iban_calc_repo
                 // if over 10
                 ibannumber = "FI" + end2 + ibannumber;
             }
+
+            Console.WriteLine(ibannumber);
             return ibannumber;
         }
     }
