@@ -10,6 +10,15 @@ namespace h1_iban_calc_repo
     {
         static void Main(string[] args)
         {
+            // About program desing: BBAN -> IBAN converter
+            //  Chapter  I  - Asks BBAN number       - input : None   - returns: bbanbunber
+            //  Chapter II  - Check by calculating checksum  : bbannumber : result
+            //  Chapter III - Convert to computerBBAN format : bbannumber : computerBBAN
+            //  Chapter IV  - Convert BBAN to IBAN format    : computerBBAN : ibannumber
+            //  Chapter  V  - IBAN number checksum           : ibannumber : ibannumber
+            //  Chapter VI  - Writes ibannumber on screen
+
+
             //string bbannumber;
             string ibannumber;
             int templength = 0;
