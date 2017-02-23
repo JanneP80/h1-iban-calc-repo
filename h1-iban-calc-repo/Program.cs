@@ -15,17 +15,17 @@ namespace h1_iban_calc_repo
 
         static void Main(string[] args)
         {
-            // About program desing: BBAN -> IBAN converter
-            //  Chapter  I  - Asks BBAN number       - input : None   - returns: bbannumber
-            //  Chapter  II - Convert to computerBBAN format : bbannumber : computerBBAN
-            //  Chapter III - Check by calculating checksum  : computerBBAN : result
-            //  Chapter IV  - Convert BBAN to IBAN format    : computerBBAN : ibannumber
-            //  Chapter  V  - IBAN number checksum           : ibannumber : ibannumber
-            //  Chapter VI  - Writes ibannumber on screen
+        // About program desing: BBAN -> IBAN converter
+        //  Chapter  I  - Asks BBAN number       - input : None   - returns: bbannumber
+        //  Chapter  II - Convert to computerBBAN format : bbannumber : computerBBAN
+        //  Chapter III - Check by calculating checksum  : computerBBAN : result
+        //  Chapter IV  - Convert BBAN to IBAN format    : computerBBAN : ibannumber
+        //  Chapter  V  - IBAN number checksum           : ibannumber : ibannumber
+        //  Chapter VI  - Clean to easy-read format and write ibannumber on screen 
 
-            // Main starts :
-            d1: // Checking return result here and print fail in Main and call loop again goto until pass
-            { 
+        // Main starts :
+        d1: // Checking return result here and print fail in Main and call loop again goto until pass
+            {
                 bbannumber = InputBBANNumber();                              // I
                 ConvertToComputerBBAN(bbannumber);                           // II
                 if (CalcBBANChecksum(computerBBAN) == false)                 // III 
@@ -36,34 +36,36 @@ namespace h1_iban_calc_repo
                 }
                 else goto o1;
             }
-            o1:
+        o1:
             ConvertBBANToIBAN(computerBBAN);                                 // IV
             ibannumber = CalcIBANChecksum(ibannumber, ibannumbertemp);       // V
                                                                              // VI : Write in main.
             Console.Write("Your IBAN number is: ");
-            Console.WriteLine(ibannumber); // Final result of conversion
+            Console.WriteLine(ibannumber); // Final result of the conversion
+            Console.WriteLine(CleanResult(ibannumber)); // And in easy to read format
+            
             Console.ReadKey();
         }
 
         static string InputBBANNumber()   // I
         {
-            // asks BBAN account number in format xxxxxx-xx(xxxx)
-            b2:
+        // asks BBAN account number in format xxxxxx-xx(xxxx)
+        b2:
             Console.WriteLine("Please enter your BBAN account number in format xxxxxx-xx(xxxx): ");
             bbannumber = Console.ReadLine();
             //  remove space and line if needed
-            bbannumber = bbannumber.Replace("-", "").Replace(" ", "");            
+            bbannumber = bbannumber.Replace("-", "").Replace(" ", "");
             // Checking for correct input
             if (bbannumber.Length < 8 | bbannumber.Length > 14 | !bbannumber.All(Char.IsNumber))
-            {                
-                    string errorMessage = "The number you gave is not in BBAN format.\nYour input was either too short or long or it contained non numeric characters.";
-                    Console.WriteLine(errorMessage);
-                    goto b2;                    
+            {
+                string errorMessage = "The number you gave is not in BBAN format.\nYour input was either too short or long or it contained non numeric characters.";
+                Console.WriteLine(errorMessage);
+                goto b2;
             }
             else
             {
                 return bbannumber;
-            } 
+            }
         }
 
         static char[] ConvertToComputerBBAN(string bbannumber)    // II
@@ -91,7 +93,7 @@ namespace h1_iban_calc_repo
                     templength = arraytoedit.Length - 6; // 6-14
                 }
             }
-            
+
             int i5 = 0;
             for (int i4 = arraytoedit.Length; i4 > arraytoedit.Length - templength; i4--)
             {
@@ -112,7 +114,7 @@ namespace h1_iban_calc_repo
 
             char[] computerBBANchecksum = computerBBAN.Take(computerBBAN.Count() - 1).ToArray(); // One last number must be removed for calculations
             int[] BBANint = Array.ConvertAll(computerBBANchecksum, c => (int)Char.GetNumericValue(c));
-            
+
             for (int ii = 0; ii < BBANintChecksum.Length; ii++)
             {
                 BBANintChecksum[ii] = BBANint[ii] * multiplermatrix[ii];
@@ -133,7 +135,7 @@ namespace h1_iban_calc_repo
                 sum += y[ei];
             }
             // Console.WriteLine(sum); // for error checking
-            int sumCeil = (int)(Math.Ceiling(sum / 10.0d) * 10);            
+            int sumCeil = (int)(Math.Ceiling(sum / 10.0d) * 10);
             int checksum10 = sumCeil - sum;
             Console.Write("BBAN checksum: {0} - {1} = {2}. ", sumCeil, sum, checksum10);
 
@@ -149,7 +151,7 @@ namespace h1_iban_calc_repo
             {
                 Console.WriteLine("BBAN Checksum check fail.");
                 return false;
-            }            
+            }
         }
 
         static string ConvertBBANToIBAN(char[] computerBBAN)  // IV
@@ -189,8 +191,18 @@ namespace h1_iban_calc_repo
             {
                 // if over 10
                 ibannumber = "FI" + end2 + ibannumber;
-            }            
+            }
             return ibannumber;
+        }
+
+        static string CleanResult(string ibannumber) // adding spaces for easy reading
+        {
+            string FinalIbannumber = ibannumber.Insert(4, " ");
+            FinalIbannumber = FinalIbannumber.Insert(9, " ");
+            FinalIbannumber = FinalIbannumber.Insert(14, " ");
+            FinalIbannumber = FinalIbannumber.Insert(19, " ");
+            Console.Write("And the neat form is: ");
+            return FinalIbannumber;
         }
     }
 }
