@@ -31,6 +31,7 @@ namespace h1_iban_calc_repo
                 if (CalcBBANChecksum(computerBBAN) == false)                 // III 
                 {
                     Console.WriteLine("Try Again.");
+                    computerBBAN = new char[] { '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0' }; // reset to avoid false on next correct time
                     goto d1;
                 }
                 else goto o1;
@@ -107,6 +108,7 @@ namespace h1_iban_calc_repo
             // calc the checksum with Luhn modulo 10 !!            
             int[] multiplermatrix = { 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
             int[] BBANintChecksum = new int[13];
+            int sum = 0;
 
             char[] computerBBANchecksum = computerBBAN.Take(computerBBAN.Count() - 1).ToArray(); // One last number must be removed for calculations
             int[] BBANint = Array.ConvertAll(computerBBANchecksum, c => (int)Char.GetNumericValue(c));
@@ -126,7 +128,6 @@ namespace h1_iban_calc_repo
 
             int[] y = results.Select(o => o - 48).ToArray();
 
-            int sum = 0;
             for (int ei = 0; ei < y.Length; ei++)
             {
                 sum += y[ei];
@@ -134,11 +135,11 @@ namespace h1_iban_calc_repo
             // Console.WriteLine(sum); // for error checking
             int sumCeil = (int)(Math.Ceiling(sum / 10.0d) * 10);            
             int checksum10 = sumCeil - sum;
-            Console.WriteLine("BBAN checksum: {0} - {1} = {2}. ", sumCeil, sum, checksum10);
+            Console.Write("BBAN checksum: {0} - {1} = {2}. ", sumCeil, sum, checksum10);
 
             // computerBBAN to int
             int[] BBANint14 = Array.ConvertAll(computerBBAN, c => (int)Char.GetNumericValue(c));
-
+            Console.WriteLine("Compared to: {0}", BBANint14[13]);
             if (BBANint14[13] == checksum10)
             {
                 Console.WriteLine("BBAN Checksum check pass.");
