@@ -115,12 +115,12 @@ namespace h1_iban_calc_repo
             {
                 BBANintChecksum[ii] = BBANint[ii] * multiplermatrix[ii];
             }
-            
+            /*
             for (int ai = 0; ai < BBANintChecksum.Length; ai++)
             {
-                Console.Write(BBANintChecksum[ai] + " "); // Miksi
-
+                Console.Write(BBANintChecksum[ai] + " "); // Error checking option
             }
+            */
             string results = string.Join("", BBANintChecksum.Select(i => i.ToString()).ToArray());
             // Console.WriteLine(results);
 
@@ -131,10 +131,10 @@ namespace h1_iban_calc_repo
             {
                 sum += y[ei];
             }
-            Console.WriteLine(sum); // muuta
-            int sumCeil = (int)(Math.Ceiling(sum / 10.0d) * 10);
-            Console.WriteLine(sumCeil - sum);
+            // Console.WriteLine(sum); // for error checking
+            int sumCeil = (int)(Math.Ceiling(sum / 10.0d) * 10);            
             int checksum10 = sumCeil - sum;
+            Console.WriteLine("BBAN checksum: {0} - {1} = {2}. ", sumCeil, sum, checksum10);
 
             // computerBBAN to int
             int[] BBANint14 = Array.ConvertAll(computerBBAN, c => (int)Char.GetNumericValue(c));
@@ -148,25 +148,21 @@ namespace h1_iban_calc_repo
             {
                 Console.WriteLine("BBAN Checksum check fail.");
                 return false;
-            }
-            // Is here need for reorganize
-            // Maybe return result here and print it in Main and call loop again goto until pass
+            }            
         }
 
         static string ConvertBBANToIBAN(char[] computerBBAN)  // IV
         {
-
-            // convert BBAN to IBAN format : XXyy YYYY YYYY YYYY YY
-            // add end FI and numbers
+            // Goal: convert BBAN to IBAN format : XXyy YYYY YYYY YYYY YY
+            // First add end FI and numbers
             ibannumber = new string(computerBBAN);
             ibannumbertemp = ibannumber.Insert(14, "151800"); //add FI00 = 151800
             // Console.WriteLine(ibannumbertemp);
-            return ibannumbertemp;
+            return ibannumbertemp; // Also could be calling CalcIBANChecksum here for better logic.
         }
 
         static string CalcIBANChecksum(string ibannumber, string ibannumbertemp) // V
         {
-
             // calc IBAN checksum
 
             decimal ibannumberinteger = Convert.ToDecimal(ibannumbertemp);
@@ -174,16 +170,16 @@ namespace h1_iban_calc_repo
             decimal disc = 0;
 
             counting = (ibannumberinteger % 97);
-            disc = (98 - counting); // add to ibannumber (is string)
-            Console.WriteLine(disc);
-            Console.WriteLine(ibannumberinteger);
+            disc = (98 - counting); // Next add this to ibannumber (is string)
+            // Console.WriteLine(disc);            
             // ibannumberinteger = ibannumberinteger + disc; // helppo muttei käyttökelpoinen
+            // Console.WriteLine(ibannumberinteger);
 
-            // palauta string muotoon
+            // Revert back to string
             // ibannumber = ibannumberinteger.ToString(); // ei toimi, näyttää doublena
 
             string end2 = disc.ToString();
-            // jos alle 10
+            // If under 10, add extra zero
             if (disc < 10)
             {
                 ibannumber = "FI" + '0' + end2 + ibannumber;
@@ -192,9 +188,7 @@ namespace h1_iban_calc_repo
             {
                 // if over 10
                 ibannumber = "FI" + end2 + ibannumber;
-            }
-
-            Console.WriteLine(ibannumber);
+            }            
             return ibannumber;
         }
     }
