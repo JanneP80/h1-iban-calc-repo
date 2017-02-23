@@ -24,39 +24,53 @@ namespace h1_iban_calc_repo
             //  Chapter VI  - Writes ibannumber on screen
 
             // Main starts :
-
-            bbannumber = InputBBANNumber();     // I
-            Console.WriteLine(bbannumber);
-            ConvertToComputerBBAN(bbannumber);  // II
-            CalcBBANChecksum(computerBBAN);     // III // Maybe return result here and print it in Main and call loop again goto until pass
+            d1: // Checking return result here and print fail in Main and call loop again goto until pass
+            { 
+                bbannumber = InputBBANNumber();     // I
+                // Console.WriteLine(bbannumber);
+                ConvertToComputerBBAN(bbannumber);  // II
+                if (CalcBBANChecksum(computerBBAN) == false)     // III 
+                {
+                    Console.WriteLine("Try Again.");
+                    goto d1;
+                }
+                else goto o1;
+            }
+            o1:
             ConvertBBANToIBAN(computerBBAN);    // IV
             ibannumber = CalcIBANChecksum(ibannumber, ibannumbertemp);       // V
                                                                              // VI : Write in main.
-            Console.WriteLine(ibannumber);
-
+            Console.Write("Your IBAN number is: ");
+            Console.WriteLine(ibannumber); // Final result of conversion
             Console.ReadKey();
         }
 
         static string InputBBANNumber()   // I
         {
             // asks BBAN account number in format xxxxxx-xx(xxxx)
-
+            b2:
             Console.WriteLine("Please enter your BBAN account number in format xxxxxx-xx(xxxx): ");
             bbannumber = Console.ReadLine();
             //  remove space and line if needed
-            bbannumber = bbannumber.Replace("-", "").Replace(" ", "");
-
-            // TODO! tarkista ettei käyttäjä syötä liiba-laabaa TODO! 6+ (2...6).
-
-            Console.WriteLine(bbannumber);
-            return bbannumber;
+            bbannumber = bbannumber.Replace("-", "").Replace(" ", "");            
+            // Checking for correct input
+            if (bbannumber.Length < 8 | bbannumber.Length > 14 | !bbannumber.All(Char.IsNumber))
+            {                
+                    string errorMessage = "Your BBAN number is incorrect. Your input was too short/long or you inserted non numeric characters.";
+                    Console.WriteLine(errorMessage);
+                    goto b2;                    
+            }
+            else
+            {
+                return bbannumber;
+            } 
         }
 
         static char[] ConvertToComputerBBAN(string bbannumber)    // II
         {
             int templength = 0;
-            Console.WriteLine("bug:");
-            Console.WriteLine(bbannumber);
+            // Console.WriteLine("bug:");
+            // Console.WriteLine(bbannumber);
             char[] arraytoedit = bbannumber.ToCharArray();
 
             for (int i = 0; i < arraytoedit.Length; i++) // start converting into computer liguistic mode
@@ -93,7 +107,7 @@ namespace h1_iban_calc_repo
             return computerBBAN;
         }
 
-        static void CalcBBANChecksum(char[] computerBBANr) // III
+        static bool CalcBBANChecksum(char[] computerBBANr) // III
         {
             // calc the checksum with Luhn modulo 10 !!            
             int[] multiplermatrix = { 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
@@ -135,10 +149,12 @@ namespace h1_iban_calc_repo
             if (BBANint14[13] == checksum10)
             {
                 Console.WriteLine("BBAN Checksum check pass.");
+                return true;
             }
             else
             {
                 Console.WriteLine("BBAN Checksum check fail.");
+                return false;
             }
             // Is here need for reorganize
             // Maybe return result here and print it in Main and call loop again goto until pass
