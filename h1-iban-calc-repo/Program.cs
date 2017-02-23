@@ -26,10 +26,9 @@ namespace h1_iban_calc_repo
             // Main starts :
             d1: // Checking return result here and print fail in Main and call loop again goto until pass
             { 
-                bbannumber = InputBBANNumber();     // I
-                // Console.WriteLine(bbannumber);
-                ConvertToComputerBBAN(bbannumber);  // II
-                if (CalcBBANChecksum(computerBBAN) == false)     // III 
+                bbannumber = InputBBANNumber();                              // I
+                ConvertToComputerBBAN(bbannumber);                           // II
+                if (CalcBBANChecksum(computerBBAN) == false)                 // III 
                 {
                     Console.WriteLine("Try Again.");
                     goto d1;
@@ -37,7 +36,7 @@ namespace h1_iban_calc_repo
                 else goto o1;
             }
             o1:
-            ConvertBBANToIBAN(computerBBAN);    // IV
+            ConvertBBANToIBAN(computerBBAN);                                 // IV
             ibannumber = CalcIBANChecksum(ibannumber, ibannumbertemp);       // V
                                                                              // VI : Write in main.
             Console.Write("Your IBAN number is: ");
@@ -56,7 +55,7 @@ namespace h1_iban_calc_repo
             // Checking for correct input
             if (bbannumber.Length < 8 | bbannumber.Length > 14 | !bbannumber.All(Char.IsNumber))
             {                
-                    string errorMessage = "Your BBAN number is incorrect. Your input was too short/long or you inserted non numeric characters.";
+                    string errorMessage = "The number you gave is not in BBAN format.\nYour input was either too short or long or it contained non numeric characters.";
                     Console.WriteLine(errorMessage);
                     goto b2;                    
             }
@@ -69,11 +68,9 @@ namespace h1_iban_calc_repo
         static char[] ConvertToComputerBBAN(string bbannumber)    // II
         {
             int templength = 0;
-            // Console.WriteLine("bug:");
-            // Console.WriteLine(bbannumber);
             char[] arraytoedit = bbannumber.ToCharArray();
 
-            for (int i = 0; i < arraytoedit.Length; i++) // start converting into computer liguistic mode
+            for (int i = 0; i < arraytoedit.Length; i++) // Start converting into computer liguistic mode
             {
                 if (arraytoedit[0] == '4' | arraytoedit[0] == '5')
                 {
@@ -93,9 +90,7 @@ namespace h1_iban_calc_repo
                     templength = arraytoedit.Length - 6; // 6-14
                 }
             }
-            Console.WriteLine(templength);
-            Console.WriteLine(arraytoedit);
-            Console.WriteLine(computerBBAN);
+            
             int i5 = 0;
             for (int i4 = arraytoedit.Length; i4 > arraytoedit.Length - templength; i4--)
             {
@@ -103,7 +98,7 @@ namespace h1_iban_calc_repo
                 computerBBAN[13 - i5] = arraytoedit[i4 - 1];
                 i5++;
             }
-            Console.WriteLine(computerBBAN);
+            // Console.WriteLine(computerBBAN);
             return computerBBAN;
         }
 
@@ -111,25 +106,23 @@ namespace h1_iban_calc_repo
         {
             // calc the checksum with Luhn modulo 10 !!            
             int[] multiplermatrix = { 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
+            int[] BBANintChecksum = new int[13];
+
             char[] computerBBANchecksum = computerBBAN.Take(computerBBAN.Count() - 1).ToArray(); // One last number must be removed for calculations
             int[] BBANint = Array.ConvertAll(computerBBANchecksum, c => (int)Char.GetNumericValue(c));
-            //for (int a = 0; a < BBANint.Length; a++)
-            //{
-
-            //}
-            int[] BBANintChecksum = new int[13];
+            
             for (int ii = 0; ii < BBANintChecksum.Length; ii++)
             {
                 BBANintChecksum[ii] = BBANint[ii] * multiplermatrix[ii];
             }
-            // Console.WriteLine(BBANintChecksum);
+            
             for (int ai = 0; ai < BBANintChecksum.Length; ai++)
             {
-                Console.Write(BBANintChecksum[ai] + " ");
+                Console.Write(BBANintChecksum[ai] + " "); // Miksi
 
             }
             string results = string.Join("", BBANintChecksum.Select(i => i.ToString()).ToArray());
-            Console.WriteLine(results);
+            // Console.WriteLine(results);
 
             int[] y = results.Select(o => o - 48).ToArray();
 
@@ -138,7 +131,7 @@ namespace h1_iban_calc_repo
             {
                 sum += y[ei];
             }
-            Console.WriteLine(sum);
+            Console.WriteLine(sum); // muuta
             int sumCeil = (int)(Math.Ceiling(sum / 10.0d) * 10);
             Console.WriteLine(sumCeil - sum);
             int checksum10 = sumCeil - sum;
@@ -167,7 +160,7 @@ namespace h1_iban_calc_repo
             // add end FI and numbers
             ibannumber = new string(computerBBAN);
             ibannumbertemp = ibannumber.Insert(14, "151800"); //add FI00 = 151800
-            Console.WriteLine(ibannumbertemp);
+            // Console.WriteLine(ibannumbertemp);
             return ibannumbertemp;
         }
 
